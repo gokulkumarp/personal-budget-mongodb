@@ -7,7 +7,7 @@ body {
   font-family: Tahoma, Arial;
 }
 
-div.menu {
+nav.menu {
   width: 100%;
   background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)),
     url(back.png);
@@ -16,15 +16,15 @@ div.menu {
   padding: 0 40px;
 }
 
-div.menu ul,
-div.menu ul li {
+nav.menu ul,
+nav.menu ul li {
   margin: 0;
   padding: 0;
   list-style: none;
   display: inline-block;
 }
 
-div.menu ul li a {
+nav.menu ul li a {
   display: block;
   padding: 0 20px;
   line-height: 44px;
@@ -34,7 +34,7 @@ div.menu ul li a {
   margin: 0;
 }
 
-div.menu ul li a:hover {
+nav.menu ul li a:hover {
   background-color: white;
   color: #4d5791;
 }
@@ -65,6 +65,16 @@ div.hero h2 {
   color: #4d5791;
 }
 
+aside {
+  width: 40%;
+  /* padding-left: 0.5rem; */
+  margin-left: 4.5rem;
+  float: right;
+  padding-left: 0px;
+  text-align: initial;
+  padding-top: 20px;
+}
+
 .container {
   padding: 40px;
   width: 100%;
@@ -93,6 +103,40 @@ div.hero h2 {
   margin: 20px;
 }
 
+.container article {
+  display: inline-block;
+  width: 100%;
+  max-width: 340px;
+  text-align: justify;
+  margin: 20px;
+}
+.boxs {
+  display: inline-flex;
+  width: 39%;
+  max-width: 340px;
+  text-align: justify;
+  margin: 20px;
+}
+.foot {
+  height: 75px;
+  padding-left: 91px;
+  background-color: #333;
+  padding-top: 33px;
+}
+#img1 {
+  width: 3%;
+  margin-left: 734px;
+  margin-top: -19px;
+  background-color: #b4c6f0;
+}
+#link {
+  font-size: 15px;
+  position: absolute;
+  right: -55px;
+  margin-bottom: 28px;
+  margin-top: -15px;
+  margin-right: 100px;
+}
 @media screen and (min-width: 768px) {
   .container .div.text-box {
     margin: 10px;
