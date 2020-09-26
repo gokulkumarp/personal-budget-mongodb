@@ -8,7 +8,10 @@
       name="description"
       content="A personal Budget app to keep track of your money spent"
     />
-    <title>Personal Budget</title>
+    <!--This is an SEO change-->
+    <title>About Budget</title>
+    <!--This is a11y Change-->
+    <a class="skip-link" href="#main">Skip to content</a>
     <link rel="stylesheet" href="reset.css" />
     <link rel="stylesheet" href="main.css" />
     <link
@@ -20,7 +23,7 @@
     <!--This is a semantic HTML change-->
     <nav class="menu">
       <ul>
-        <li><a href="#">Home</a></li>
+        <li><a href="./index.html">Home</a></li>
         <li><a href="./about.html">About</a></li>
         <li><a href="./login.html">Login</a></li>
         <li><a href="https://google.com">Google</a></li>
@@ -29,7 +32,8 @@
           <a href="http://github.com/gokulkumarp" title="github">Github</a>
         </li>
         <li>
-          <a href="https://www.linkedin.com/in/gokulkumar-p/">
+          <!--This is a SEO change-->
+          <a rel="nofollow" href="https://www.linkedin.com/in/gokulkumar-p/">
             <!--this is a11y change-->
             <button id="link">
               Linkedin <i class="fa fa-linkedin-square"></i>
@@ -42,7 +46,7 @@
     <header>
       <div class="hero">
         <h1>About Budget</h1>
-        <!--This is a SEO change-->
+        <!--This is a a11y change-->
         <img id="img1" src="bud.png" alt="Track" />
         <h2>A personal-budget management app</h2>
       </div>
@@ -119,7 +123,7 @@
       </section>
     </div>
     <!--This is a semantic change-->
-    <footer class="foot">
+    <footer id="main" class="foot">
       <div class="center">All rights reserved &copy; Fabio Nolasco</div>
     </footer>
   </body>
