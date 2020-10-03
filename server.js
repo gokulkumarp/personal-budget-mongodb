@@ -1,8 +1,15 @@
 const express = require("express");
 const app = express();
 const port = 3000;
+const fs = require("fs");
 
 app.use("/", express.static("public"));
+
+var budgetData;
+fs.readFile("budget.json", "utf8", function (err, data) {
+  if (err) throw err;
+  budgetData = JSON.parse(data);
+});
 
 const budget = {
   myBudget: [
@@ -26,7 +33,7 @@ app.get("/hello", function (req, res) {
 });
 
 app.get("/budget", function (req, res) {
-  res.json(budget);
+  res.json(budgetData);
 });
 
 app.listen(port, () => {
