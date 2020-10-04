@@ -1,15 +1,17 @@
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 const fs = require("fs");
 
 app.use("/", express.static("public"));
 
+//Loading data from Json file
 var budgetData;
 fs.readFile("budget.json", "utf8", function (err, data) {
   if (err) throw err;
   budgetData = JSON.parse(data);
 });
+//------------
 
 const budget = {
   myBudget: [

@@ -15,8 +15,13 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
+    <script src="https://d3js.org/d3.v4.js"></script>
+
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+
+
+
   </head>
-  <>
     <!--This is a semantic HTML change-->
     <nav class="menu">
       <ul>
@@ -104,17 +109,16 @@
         </aside>
 
         <article class="text-box">
-          <h1>Results</h1>
+          <h1>D3js Chart</h1>
           <p>
-            People who stick to a financial plan, budgeting every expense, get
-            out of debt faster! Also, they to live happier lives... since they
-            expend without guilt or fear... because they know it is all good and
-            accounted for.
+            <div id="dChart">
+
+            </div>
           </p>
         </article>
 
         <aside class="text-box">
-          <h1>Free</h1>
+          <h1>Chart</h1>
          <p>
           <canvas id="myChart" width="400" height="400"></canvas>
  
@@ -137,45 +141,9 @@
       integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg=="
       crossorigin="anonymous"
     ></script>
-    <script>
-      var dataSource = {
-    datasets: [{
-      data: [],
-        backgroundColor:[
-          '#ffcd56',
-          '#ff6384',
-          '#36a2eb',
-          '#fd6b19',
-        ]
-    }],
+    <script src="budget.js"></script>
 
-    labels: [
-  
-    ]
-};
-createChart = ()=>{
-  const ctx = document.getElementById('myChart').getContext('2d');
-  const myPieChart = new Chart(ctx, {
-    type:'pie',
-    data: dataSource
-  })
-}
 
-getBudget = ()=>{
-  axios.get('/budget')
-  .then((res)=>{
-    console.log(res);
-    for(let i = 0; i< res.data.myBudget.length; i++){
-      dataSource.datasets[0].data[i] = res.data.myBudget[i].budget;
-      dataSource.labels[i] = res.data.myBudget[i].title;
-    }
-    createChart();
-
-  })
-}
-
-getBudget();
-      </script>
 
   </body>
 </html>
