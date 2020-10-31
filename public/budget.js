@@ -1,62 +1,47 @@
-var dataSource = {
-  datasets: [
-    {
-      data: [],
-      backgroundColor: [
-        "#ffcd56",
-        "#ff6384",
-        "#36a2eb",
-        "#fd6b19",
-        "#a05d56",
-        "#d0743c",
-        "#ff8c00",
-      ],
-    },
-  ],
-
-  labels: [],
-};
-createChart = () => {
-  const ctx = document.getElementById("myChart").getContext("2d");
-  const myPieChart = new Chart(ctx, {
+function createChart(data) {
+  var labels = []
+  var _data = []
+  var colors = []
+  for (var i = 0; i < data.length; i++){
+    labels[i] = data[i].title
+    _data[i] = data[i].budget
+    colors[i] = data[i].color
+  }
+  var ctx = document.getElementById("myChart").getContext("2d");
+  var myPieChart = new Chart(ctx, {
     type: "pie",
-    data: dataSource,
+    data: {
+      labels: labels,
+      datasets:[
+        {
+          data: _data,
+          backgroundColor:colors
+        }
+
+      ]
+    },
   });
-};
+}
 
-getBudget = () => {
-  axios.get("/budget").then((res) => {
-    //console.log(res);
-    for (let i = 0; i < res.data.myBudget.length; i++) {
-      dataSource.datasets[0].data[i] = res.data.myBudget[i].budget;
-      dataSource.labels[i] = res.data.myBudget[i].title;
-    }
-    createChart();
-  });
-};
 
-getBudget();
-var myBudgetData = {};
-var arrBudget;
 
-//Load data from budget.json with d3.json
-d3.json("/budget").then((data) => {
-  console.log(data);
-  arrBudget = data.myBudget;
-  arrBudget.forEach((item) => {
-    myBudgetData[item.title] = item.budget;
-  });
+createD3Chart= (data)=> {
 
-  getDbuget();
-});
+  var labels = []
+  var colors = []
+  for(var i = 0; i < data.length; i++){
+    labels[i] = data[i].title
+    colors[i] = data[i].color
+  }
 
-getDbuget = () => {
-  var width = 450;
-  height = 450;
+  var width = 750;
+  height = 650;
   margin = 40;
 
+  // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
   var radius = Math.min(width, height) / 2 - margin;
 
+  // append the svg object to the div called 'my_dataviz'
   var svg = d3
     .select("#dChart")
     .append("svg")
@@ -65,30 +50,34 @@ getDbuget = () => {
     .append("g")
     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-  var data = myBudgetData;
+  // set the color scale
   var color = d3
     .scaleOrdinal()
-    .domain(["a", "b", "c", "d", "e", "f", "g", "h"])
-    .range(d3.schemeDark2);
+    .domain(labels)
+    .range(colors);
 
+  // Compute the position of each group on the pie:
   var pie = d3
     .pie()
-    .sort(null)
+    .sort(null) // Do not sort group by size
     .value(function (d) {
-      return d.value;
+      return d.value.budget;
     });
   var data_ready = pie(d3.entries(data));
 
+  // The arc generator
   var arc = d3
     .arc()
-    .innerRadius(radius * 0.5)
+    .innerRadius(radius * 0.5) // This is the size of the donut hole
     .outerRadius(radius * 0.8);
 
+  // Another arc that won't be drawn. Just for labels positioning
   var outerArc = d3
     .arc()
-    .innerRadius(radius * 0.9)
+    .innerRadius(radius * 1)
     .outerRadius(radius * 0.9);
 
+  // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
   svg
     .selectAll("allSlices")
     .data(data_ready)
@@ -96,12 +85,13 @@ getDbuget = () => {
     .append("path")
     .attr("d", arc)
     .attr("fill", function (d) {
-      return color(d.data.key);
+      return color(d.data.value.title);
     })
     .attr("stroke", "white")
     .style("stroke-width", "2px")
     .style("opacity", 0.7);
 
+  // Add the polylines between chart and labels:
   svg
     .selectAll("allPolylines")
     .data(data_ready)
@@ -111,22 +101,22 @@ getDbuget = () => {
     .style("fill", "none")
     .attr("stroke-width", 1)
     .attr("points", function (d) {
-      var posA = arc.centroid(d);
-      var posB = outerArc.centroid(d);
-      var posC = outerArc.centroid(d);
-      var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2;
-      posC[0] = radius * 0.95 * (midangle < Math.PI ? 1 : -1);
+      var posA = arc.centroid(d); // line insertion in the slice
+      var posB = outerArc.centroid(d); // line break: we use the other arc generator that has been built only for that
+      var posC = outerArc.centroid(d); // Label position = almost the same as posB
+      var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2; // we need the angle to see if the X position will be at the extreme right or extreme left
+      posC[0] = radius * 0.95 * (midangle < Math.PI ? 1 : -1); // multiply by 1 or -1 to put it on the right or on the left
       return [posA, posB, posC];
     });
 
+  // Add the polylines between chart and labels:
   svg
     .selectAll("allLabels")
     .data(data_ready)
     .enter()
     .append("text")
     .text(function (d) {
-      console.log(d.data.key);
-      return d.data.key;
+      return d.data.value.title;
     })
     .attr("transform", function (d) {
       var pos = outerArc.centroid(d);
@@ -138,4 +128,13 @@ getDbuget = () => {
       var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2;
       return midangle < Math.PI ? "start" : "end";
     });
-};
+}
+
+
+getBudget=()=> {
+  axios.get("/budget/all").then((res) => {          
+    createChart(res.data);
+    createD3Chart(res.data);
+  });
+}
+getBudget();

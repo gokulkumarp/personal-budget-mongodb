@@ -2,41 +2,42 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
 const fs = require("fs");
+const budgetModel = require("./models/budget-schema");
+
+
+let url = 'mongodb://localhost:27017/budget_expense'
 
 app.use("/", express.static("public"));
 
-//Loading data from Json file
-var budgetData;
-fs.readFile("budget.json", "utf8", function (err, data) {
-  if (err) throw err;
-  budgetData = JSON.parse(data);
-});
-//------------
+const mongoose = require("mongoose");
+require("dotenv").config();
+const expense = require("./budgetRoute");
 
-const budget = {
-  myBudget: [
-    {
-      title: "Eat out",
-      budget: 30,
-    },
-    {
-      title: "Rent",
-      budget: 375,
-    },
-    {
-      title: "Groceries",
-      budget: 100,
-    },
-  ],
-};
+mongoose
+  .connect(url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("Connected to Database");
+    budgetModel.find({})
+    .then((data)=>{
+    })
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
-app.get("/hello", function (req, res) {
-  res.send("hello world");
-});
 
-app.get("/budget", function (req, res) {
-  res.json(budgetData);
-});
+
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+  
+  app.use("/", express.static("public"));
+  
+  // Route Middleware
+  app.use("/budget", expense);
+  
 
 app.listen(port, () => {
   console.log("Example app listening at http://localhost:" + port);
